@@ -88,8 +88,54 @@ for(i in 2:3){
   points(b$Yards[i]-1,b[i,b$Yards[i]-1])
   }
 
+#Need a way to find deviations for rates for percentages. 
+c= rate_builder(a.sec)
+c$Yards = df$Yards
+#[rows,columns]
+c.matrix = as.matrix(c[1:280,])
+#need to complete more than 12 yards min.
+
+for(i in 1:nrow(c.matrix)){
+  i_length = c$Yards[i]
+  q1 = round(i_length/4,digits = 0)
+  q2 = q1*2+1
+  q3 = q1 *3 +2
+  q4 = i_length
+  
+  c$rate_sd1[i] = sd(c.matrix[1,2:q1])
+  c$rate_sd2[i] = sd(c.matrix[1,q1:q2])
+  c$rate_sd3[i] = sd(c.matrix[1,q2:q3])
+  c$rate_sd4[i] = sd(c.matrix[1,q3:q4])
+  
+}
 
 
-#sqldf('select * from teamdf where  ')
+plot.new()
+plot(c(25,50,75,100),c[17,grepl("rate_sd",names(c))],type="l",xlab = "%laps completd",ylab = "Std dev rate change",col=randomColor(10))
+points(c(25,50,75,100),c[25,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
+points(c(25,50,75,100),c[1,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd = 2)
+points(c(25,50,75,100),c[50,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
+points(c(25,50,75,100),c[90,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
+points(d$rate_sd1[1],d$Yards[1],pch=0:25)
+points(c(25,50,75,100),c[150,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
+points(c(25,50,75,100),c[280,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd=3)
+
+d =c[1:280,]
+d =d[-1]
+
+lm.1 = lm(Yards~rate_sd1,data = d)
+
+plot.new()
+plot(Yards~rate_sd1, data = d,col=randomColor(10))
+points(d$rate_sd1[1],d$Yards[1],pch=0:25)
+plot.new()
+plot(Yards~rate_sd2, data = d,col=randomColor(10))
+points(d$rate_sd2[1],d$Yards[1],pch=0:25)
+plot.new()
+plot(Yards~rate_sd3, data = d,col=randomColor(10))
+points(d$rate_sd3[1],d$Yards[1],pch=0:25)
+plot.new()
+plot(Yards~rate_sd4, data = d,col=randomColor(10))
+points(d$rate_sd4[1],d$Yards[1],pch=0:25)
 
 
