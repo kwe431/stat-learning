@@ -3,8 +3,9 @@ setwd("d:/UTSA/Fall2020/DataMining/Project/stat-learning") # set working directo
 library(sqldf) #needed to run sql queries on dataframes
 install.packages("tidyverse") #needed to deal with times
 library(lubridate) #^
+library(readxl)
 df = read.csv('rawraw.csv',na.strings = c("","NA")) # read in raw csv data
-#temps = read_excel("Leaderboard - Yards 75 updated.xlsx",sheet = "temps") # read in additional temp data
+temps = read_excel("Leaderboard - Yards 75 updated.xlsx",sheet = "temps") # read in additional temp data
 
 
 #function to convert time to seconds
@@ -161,3 +162,8 @@ points(d$rate_sd_diff_4_1[280],d$Yards[280],pch=0:25)
 d$Runner = df$Runner[1:280]
 d$Team = df$Team[1:280]
 d$Nationality = df$Nationality[1:280]
+
+#work on getting temps into dataframe
+
+temps$Team = temps$Country
+e<- dplyr::left_join(d,temps,by="Team")
