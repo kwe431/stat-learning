@@ -9,9 +9,12 @@ df = read.csv('rawraw.csv',na.strings = c("","NA")) # read in raw csv data
 
 #function to convert time to seconds
 time_to_Sec <- function(x){
-  sec = period_to_seconds(seconds(hms(x)))
+  per = ms(substr(x,1,5))
+  sec = period_to_seconds(per)
   return(sec)
 }
+
+
 
 #apply function to convert hours to seconds for easier math
 time_cols = c(5,6,7,8,12:86)
@@ -39,14 +42,14 @@ rate_builder <- function(dFrame){
   #number of yards passed in with the dataframe
   rate <- dFrame
   for(i in 2:ncol(dFrame)){
-    rate[,i] <- (dFrame[i] - dFrame[i-1])/3600 
+    rate[,i] <- (dFrame[i] - dFrame[i-1])
   }
   return(rate)
 }
 
 #df[,grepl("Yard.",names(df))]  this will give you all the columns that are "Yard..." Warning it does include Total Yards
 
-rate = rate_builder(teamdf$Australia[,1:max(teamdf$Australia$Yards)+4])
+rate = rate_builder(teamdf$Australia[1,1:max(teamdf$Australia$Yards)+4])
 rate = rate[-1] # get rid of first lap since there is nothing to compare it too
 rate=data.matrix(rate)
 dim(rate)
@@ -59,7 +62,7 @@ q2 = q1*2+1
 q3 = q1 *3 +2
 q4 = rate_length
 
-#q = quantile(rate) don't use quantile because it sorts the data BAD!
+#q = quantile(rate) don't use quantile because it sorts the data. BAD!
 
 sd(rate[1,2:10])
 sd(rate[q1:q2])
@@ -81,9 +84,9 @@ b[1,]
 
 
 plot.new()
-plot(1:74,b[1,1:74], xlab = "lap #", ylab = "rate diff in minutes", type = "l", col=randomColor(10))
+plot(1:74,b[1,1:74], xlab = "lap #", ylab = "rate diff in seconds", type = "l", col=randomColor(10))
 points(74,b[1,74])
-for(i in 2:3){
+for(i in 2:7){
   points(1:74,b[i,1:74],type = "l", col=randomColor(10, luminosity = "random"))
   points(b$Yards[i]-1,b[i,b$Yards[i]-1])
   }
@@ -95,7 +98,7 @@ c$Yards = df$Yards
 c.matrix = as.matrix(c[1:280,])
 #need to complete more than 12 yards min.
 
-for(i in 1:nrow(c.matrix)){
+for(i in 1:nrow(c)){
   i_length = c$Yards[i]
   q1 = round(i_length/4,digits = 0)
   q2 = q1*2+1
@@ -107,18 +110,28 @@ for(i in 1:nrow(c.matrix)){
   c$rate_sd3[i] = sd(c.matrix[1,q2:q3])
   c$rate_sd4[i] = sd(c.matrix[1,q3:q4])
   
+  c$avg_rate_q1[i] = mean(c.matrix[1,2:q1])
+  c$avg_rate_q2[i] = mean(c.matrix[1,q1:q2])
+  c$avg_rate_q3[i] = mean(c.matrix[1,q2:q3])
+  c$avg_rate_q4[i] = mean(c.matrix[1,q3:q4])
+  
+  
+  c$median_rate_q1[i] = median(c.matrix[1,2:q1])
+  c$median_rate_q2[i] = median(c.matrix[1,q1:q2])
+  c$median_rate_q3[i] = median(c.matrix[1,q2:q3])
+  c$median_rate_q4[i] = median(c.matrix[1,q3:q4])
 }
 
 
 plot.new()
 plot(c(25,50,75,100),c[17,grepl("rate_sd",names(c))],type="l",xlab = "%laps completd",ylab = "Std dev rate change",col=randomColor(10))
 points(c(25,50,75,100),c[25,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
-points(c(25,50,75,100),c[1,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd = 2)
+points(c(25,50,75,100),c[1,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd = 7)
 points(c(25,50,75,100),c[50,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
 points(c(25,50,75,100),c[90,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
 points(d$rate_sd1[1],d$Yards[1],pch=0:25)
 points(c(25,50,75,100),c[150,grepl("rate_sd",names(c))],type="l",col=randomColor(10))
-points(c(25,50,75,100),c[280,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd=3)
+points(c(25,50,75,100),c[280,grepl("rate_sd",names(c))],type="l",col=randomColor(10),lwd=2)
 
 d =c[1:280,]
 d =d[-1]
@@ -138,4 +151,13 @@ plot.new()
 plot(Yards~rate_sd4, data = d,col=randomColor(10))
 points(d$rate_sd4[1],d$Yards[1],pch=0:25)
 
+d$rate_sd_diff_4_1 = d$rate_sd4-d$rate_sd1
 
+plot.new()
+plot(Yards~rate_sd_diff_4_1, data = d,col=randomColor(10))
+points(d$rate_sd_diff_4_1[1],d$Yards[1],pch=0:25)
+points(d$rate_sd_diff_4_1[280],d$Yards[280],pch=0:25)
+
+d$Runner = df$Runner[1:280]
+d$Team = df$Team[1:280]
+d$Nationality = df$Nationality[1:280]
