@@ -196,7 +196,7 @@ df$US= ifelse(df$Team == "United States", 1,0)
  
 # Creating dummy varaibles for age groups
 
-df$Age14_19 = ifelse(df$Age >=15 & df$Age<=19 ,1,0)
+df$Age15_19 = ifelse(df$Age >=15 & df$Age<=19 ,1,0)
 df$Age20_24 = ifelse(df$Age >=20 & df$Age<=24,1,0)
 df$Age25_29 = ifelse(df$Age >=25 & df$Age<=29, 1,0)
 df$Age30_34 = ifelse(df$Age >=30 & df$Age<=34, 1,0)
