@@ -167,3 +167,44 @@ d$Nationality = df$Nationality[1:280]
 
 temps$Team = temps$Country
 e<- dplyr::left_join(d,temps,by="Team")
+
+
+# creating dummy variables for teams
+
+df$Australia =ifelse(df$Team == "Australia",1,0)
+df$Belarus = ifelse(df$Team =="Belarus",1,0)
+df$Belgium = ifelse(df$Team == "Belgium", 1,0)
+df$Canada = ifelse(df$Team == "Canada", 1,0)
+df$Denmark = ifelse(df$Team =="Denmark",1,0)
+df$Finland = ifelse(df$Team == "Finland", 1,0)
+df$France = ifelse(df$Team == "France", 1,0)
+df$Germany = ifelse(df$Team =="Germany",1,0)
+df$India = ifelse(df$Team == "India", 1,0)
+df$Ireland = ifelse(df$Team == "Ireland", 1,0)
+df$Japan = ifelse(df$Team =="Japan",1,0)
+df$Mexico = ifelse(df$Team == "Mexico", 1,0)
+df$NZ = ifelse(df$Team == "New Zealand", 1,0)
+df$Russia = ifelse(df$Team =="Russia",1,0)
+df$Singapore = ifelse(df$Team =="Singapore",1,0)
+df$Spain = ifelse(df$Team == "Spain", 1,0)
+df$Sweden = ifelse(df$Team == "Swede", 1,0)
+df$Switzerland = ifelse(df$Team == "Switzerland", 1,0)
+df$Ukraine = ifelse(df$Team == "Ukraine", 1,0)
+df$UK= ifelse(df$Team == "United Kingdom", 1,0)
+df$US= ifelse(df$Team == "United States", 1,0)
+
+ 
+# Creating dummy varaibles for age groups
+
+df$Age14_19 = ifelse(df$Age >=15 & df$Age<=19 ,1,0)
+df$Age20_24 = ifelse(df$Age >=20 & df$Age<=24,1,0)
+df$Age25_29 = ifelse(df$Age >=25 & df$Age<=29, 1,0)
+df$Age30_34 = ifelse(df$Age >=30 & df$Age<=34, 1,0)
+df$Age35_39 = ifelse(df$Age >=35 & df$Age<=39,1,0)
+df$Age40_44 = ifelse(df$Age >=40 & df$Age<=44, 1,0)
+df$Age45_49 = ifelse(df$Age >=45 & df$Age<=49, 1,0)
+df$Age50_54 = ifelse(df$Age >=50 & df$Age<=54,1,0)
+df$Age55_59 = ifelse(df$Age >=55 & df$Age<=59, 1,0)
+df$Age60_64 = ifelse(df$Age >=60 & df$Age<=64, 1,0)
+
+#View(df)
